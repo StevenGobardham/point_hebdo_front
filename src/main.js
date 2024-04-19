@@ -12,10 +12,18 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-import { faRightFromBracket,} from '@fortawesome/free-solid-svg-icons'
+import {faHouse, faRightFromBracket, faSignOutAlt, faHomeAlt, faSquarePlus} from '@fortawesome/free-solid-svg-icons'
+
 
 /* add icons to the library */
 library.add(faRightFromBracket)
+library.add(faSignOutAlt)
+library.add(faHouse)
+library.add(faHomeAlt)
+library.add(faSquarePlus)
+
+
+
 
 const app = createApp(App);
 app.use(router);

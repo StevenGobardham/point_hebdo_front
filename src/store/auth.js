@@ -45,7 +45,7 @@ export default {
         logout({ commit }) {
             commit('setToken', null);
             commit('setUser', null);
-            window.location.href = "/";
+            window.location.href = "/login";
         }
     },
     getters: {

@@ -1,9 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from "@/views/Home.vue";
+import Login from "@/views/Login.vue";
 import store from '@/store/store.js';
+import PointHebdo from "@/views/PointHebdo.vue";
+import PointHebdoList from "@/views/PointHebdoList.vue";
 
 const routes = [
-    { path: '/', component: Home, name: 'Home'},
+    { path: '/', component: PointHebdoList, name: 'PointHebdoList',meta: { requiresAuth: true }},
+    { path: '/login', component: Login, name: 'Login'},
+    { path: '/detail', component: PointHebdo, name: 'CreatePointHebdo', meta: { requiresAuth: true }},
+    { path: '/detail/:id', component: PointHebdo, name: 'PointHebdo',
+        props:true, meta: { requiresAuth: true },key: (to) => String(to.params.id) },
 ];
 
 const router = createRouter({
@@ -15,7 +21,7 @@ router.beforeEach((to, from, next) => {
     const isLoggedIn = store.getters['auth/isLoggedIn'];
     if (to.meta.requiresAuth && !isLoggedIn) {
         // Redirige l'utilisateur vers la page de connexion si non connecté
-        next({ name: 'login' });
+        next({ name: 'Login' });
     } else {
         next();
     }

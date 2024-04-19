@@ -1,10 +1,14 @@
 <template>
-  <div class="autocomplete-select">
+  <div class="autocomplete-dropdown">
     <input
         v-model="search"
         @input="onChange"
         type="text"
+        placeholder="Collaborateur"
     />
+    <button @click="toggleResults" class="dropdown-toggle">
+      <i class="fas fa-caret-down"></i>
+    </button>
     <ul
         v-show="isOpen"
         class="autocomplete-results"
@@ -22,8 +26,9 @@
 </template>
 
 <script>
+//TODO à supprimer une fois les test terminés
 export default {
-  name: 'AutocompleteSelect',
+  name: 'AutocompleteSelectComponent',
   data() {
     return {
       search: '',
@@ -32,32 +37,37 @@ export default {
     };
   },
   methods: {
+    filterResults() {
+      // ...
+    },
     onChange() {
       this.filterResults();
       this.isOpen = true;
     },
-    filterResults() {
-      // Replace this with your own filtering logic
-      this.results = this.items.filter(item => item.toLowerCase().includes(this.search.toLowerCase()));
-    },
     setResult(result) {
       this.search = result;
       this.isOpen = false;
-      this.$emit('input', result);
-    }
-  },
-  props: {
-    items: {
-      type: Array,
-      required: true,
+    },
+    toggleResults() {
+      this.isOpen = !this.isOpen;
     },
   },
 };
 </script>
 
-<style scoped>
-.autocomplete-select {
+<style >
+.autocomplete-dropdown {
   position: relative;
+}
+
+.dropdown-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  background: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 
 .autocomplete-results {
@@ -72,9 +82,10 @@ export default {
 }
 
 .autocomplete-result {
+  list-style: none;
+  text-align: left;
   padding: 4px 2px;
   cursor: pointer;
-  background-color: #ffffff;
 }
 
 .autocomplete-result:hover {

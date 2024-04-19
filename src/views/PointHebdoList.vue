@@ -8,9 +8,9 @@
         <div class="col-8 tableau rounded mt-5">
           <div class="row mt-5 mb-5">
             <div class="col-4">
+              <span>Collaborateur</span>
               <select class="form-select form-select-sm" aria-label=".form-select-sm example">
               </select>
-              <span>Collaborateur</span>
             </div>
             <div class="col-4"></div>
             <div class="col-2">
@@ -72,7 +72,7 @@ import TestApiService from "@/services/api/testApiService.js";
 import ErrorService from "@/services/errorService.js";
 import AppBarComponent from "@/components/util/AppBarComponent.vue";
 export default {
-  name: 'Home',
+  name: 'PointHebdoList',
   components: {
     AppBarComponent,
     LoadingComponent
@@ -94,7 +94,7 @@ export default {
         //TODO à supprimer une fois les test terminés
       },
     create(){
-      this.$router.push({"name": 'Create'});
+      this.$router.push({"name": 'CreatePointHebdo'});
     },
     testMethod(){
       console.log(this.testList)

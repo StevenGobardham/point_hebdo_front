@@ -7,7 +7,7 @@ export default class TestApiService {
 
     static async getAll() {
         const token = store.state.auth.token;
-        return await ApiService.post(`${TestApiService.servicePath}`, token);
+        return await ApiService.get(`${TestApiService.servicePath}`, token);
     }
 
     static async getById(id) {
