@@ -4,21 +4,22 @@
       <div class="col-4">
         <div class="form-outline" data-mdb-input-init>
           <label class="form-label" for="typeText">Client</label>
-          <input type="text" id="typeText" class="form-control" />
+          <input type="text" id="typeText" class="form-control" v-model="project.client" />
         </div>
       </div>
       <div class="col-4"></div>
       <div class="col-4">
         <div class="form-outline" data-mdb-input-init>
-          <label class="form-label" for="typeText">Projet</label>
-          <input type="text" id="typeText" class="form-control" />
+          <label class="form-label" for="typeText" >Projet</label>
+          <span class="btn d-flex fa-pull-right poubelle" @click="onDeleteProject"><font-awesome-icon icon="fa-solid fa-trash-can" /></span>
+          <input type="text" id="typeText" class="form-control" v-model="project.projet" />
         </div>
       </div>
     </div>
     <div class="row mt-2 mb-2">
       <div class="form-outline" data-mdb-input-init>
         <label class="form-label" for="textAreaExample">Situation</label>
-        <textarea class="form-control" id="textAreaExample" rows="4"></textarea>
+        <textarea class="form-control" id="textAreaExample" rows="4" v-model="project.situation"></textarea>
       </div>
     </div>
   </div>
@@ -28,7 +29,28 @@
 import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 export default {
   name: 'ProjectDetailsComponent',
+  props: {
+    project: {
+      type: Object,
+      required: true
+    },
+    onDeleteProject: {
+      type: Function,
+      required: true
+    },
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    deleteProject() {
+      this.$emit('delete-project');
+    }
+
   }
+}
 </script>
 
 <style>
@@ -38,6 +60,9 @@ export default {
   padding-left: 1%;
   padding-bottom: 1px;
   padding-right: 1%;
+}
 
+.poubelle{
+  width: 2px;
 }
 </style>

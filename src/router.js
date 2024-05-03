@@ -3,6 +3,9 @@ import Login from "@/views/Login.vue";
 import store from '@/store/store.js';
 import PointHebdo from "@/views/PointHebdo.vue";
 import PointHebdoList from "@/views/PointHebdoList.vue";
+import Dashboard from "@/views/Dashboard.vue";
+import CreateUserComponent from "@/views/Dashboard.vue";
+import ListUsersComponent from "@/views/Dashboard.vue";
 
 const routes = [
     { path: '/', component: PointHebdoList, name: 'PointHebdoList',meta: { requiresAuth: true }},
@@ -10,6 +13,7 @@ const routes = [
     { path: '/detail', component: PointHebdo, name: 'CreatePointHebdo', meta: { requiresAuth: true }},
     { path: '/detail/:id', component: PointHebdo, name: 'PointHebdo',
         props:true, meta: { requiresAuth: true },key: (to) => String(to.params.id) },
+    { path: '/dashboard', component: Dashboard, name: 'Dashboard', meta: { requiresAuth: true }},
 ];
 
 const router = createRouter({

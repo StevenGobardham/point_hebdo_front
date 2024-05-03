@@ -1,17 +1,18 @@
 <template>
 
-  <header @click="home()">
+  <header>
     <div class="container-fluid header">
       <div class="row">
         <div class="col-2">
-          <img  class="d-flex justify-content-start logo" src="../../../public/adg.png" alt="ADG Software Engineering" >
+          <img @click="home()" class="d-flex justify-content-start logo" src="../../../public/adg.png" alt="ADG Software Engineering" >
         </div>
         <div class="col-8 text-center">
 
-          <h1 class="title">Point hebdo</h1>
+          <h1 class="title" @click="home()">Point hebdo</h1>
         </div>
         <div class="col-2 " v-if="isLoggedIn">
           <div class="fa-pull-right">
+          <span class="btn" @click="dashboard()"><font-awesome-icon icon="fa-solid fa-user-gear" /></span>
           <span v-if="isLoggedIn" @click="home()" class="btn"><font-awesome-icon icon="fa-solid fa-house" /></span>
           <span class="btn" @click="logout"><font-awesome-icon icon="fa-solid fa-right-from-bracket" /></span>
           </div>
@@ -33,6 +34,9 @@ export default {
     home() {
       this.$router.push({"name": 'PointHebdoList'});
     },
+    dashboard(){
+      this.$router.push({"name": 'Dashboard'});
+    }
   },
   computed: {
     ...mapGetters("auth", ["isLoggedIn", "connectedUser" ]),
