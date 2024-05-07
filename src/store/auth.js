@@ -50,6 +50,6 @@ export default {
     },
     getters: {
         isLoggedIn: state => !!state.token,
-        connectedUser: state => state.user
+        connectedUser: state => state.user,
     }
 };

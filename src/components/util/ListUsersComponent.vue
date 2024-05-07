@@ -20,10 +20,13 @@
       </v-card-title>
 
       <v-data-table-virtual
+          height="525"
+          fixed-header
           :headers="headers"
           :items="users"
           :search="search"
       >
+
         <template v-slot:item.manager="{ item }">
           <v-checkbox
               v-model="item.manager"
@@ -35,12 +38,14 @@
               class="me-2"
               size="small"
               @click="editItem(item)"
+              title="Modifier"
           >
             mdi-pencil
           </v-icon>
           <v-icon
               size="small"
               @click="deleteItem(item)"
+              title="Supprimer"
           >
             mdi-delete
           </v-icon>
@@ -261,4 +266,5 @@ h1 {
   color: #494949;
   font-size: 2.5em;
 }
+
 </style>

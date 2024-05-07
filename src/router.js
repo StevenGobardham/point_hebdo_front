@@ -4,8 +4,6 @@ import store from '@/store/store.js';
 import PointHebdo from "@/views/PointHebdo.vue";
 import PointHebdoList from "@/views/PointHebdoList.vue";
 import Dashboard from "@/views/Dashboard.vue";
-import CreateUserComponent from "@/views/Dashboard.vue";
-import ListUsersComponent from "@/views/Dashboard.vue";
 
 const routes = [
     { path: '/', component: PointHebdoList, name: 'PointHebdoList',meta: { requiresAuth: true }},
@@ -30,4 +28,6 @@ router.beforeEach((to, from, next) => {
         next();
     }
 });
+
+
 export default router;

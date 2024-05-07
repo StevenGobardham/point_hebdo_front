@@ -1,8 +1,11 @@
 <template>
   <AppBarComponent/>
   <div class="container">
-    <div class="row mt-5">
+    <div class="row mt-5" v-if="isNew">
       <h1>Création du point hebdo</h1>
+    </div>
+    <div class="row mt-5" v-else>
+      <h1>Modification du point hebdo</h1>
     </div>
     <div class="container">
       <div class="row mt-5">
@@ -11,7 +14,7 @@
           <div class="row calendar">
             <div class="col-2 mt-4">
               <span>Date</span>
-              <input type="date" id="start" name="trip-start" v-model="pointHebdo.eventDateFormatted" />
+              <input class="input1 cursor-pointer" type="date" id="start" name="trip-start" v-model="pointHebdo.eventDateFormatted" />
             </div>
             <div class="col-5"></div>
             <div class="col-5 mt-4">
@@ -41,9 +44,21 @@
               </div>
             </div>
           </div>
-          <div class="row fa-pull-right mt-3 bouton-enregistrer">
-            <button type="submit" id="password" @click="createPointHebdo()" class="btn-bouton rounded mb-3"
-                    style="padding-left: 2rem; padding-right: 2rem;">Enregistrer</button>
+          <div v-if="isManager">
+            <div class="row fa-pull-right bouton-enregistrer">
+              <button type="submit" id="password" @click="validatePointHebdo" class="btn-bouton rounded mb-3"
+                      style="padding-left: 2rem; padding-right: 2rem;">Valider</button>
+            </div>
+            <div class="mt-5">
+              <button type="submit" id="password" @click="updatePointHebdo()" class="btn-bouton rounded mb-3"
+                      style="padding-left: 2rem; padding-right: 2rem;">Modifier</button>
+            </div>
+          </div>
+          <div v-else>
+            <div class="row fa-pull-right  mt-3 bouton-enregistrer">
+              <button type="submit" id="password" @click="createPointHebdo()" class="btn-bouton rounded mb-3"
+                      style="padding-left: 2rem; padding-right: 2rem;">Enregistrer</button>
+            </div>
           </div>
         </div>
       </div>
@@ -77,13 +92,16 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("auth", ["isLoggedIn", "connectedUser"]), // Mapper les getters du store Vuex
+    ...mapGetters("auth", ["isLoggedIn", "connectedUser"]),
     isNew() {
       return this.id === undefined;
+    },
+    ...mapGetters("auth", ["isLoggedIn", "connectedUser" ]),
+    isManager(){
+      return this.connectedUser.manager===true;
     }
-
-
   },
+
   methods: {
     initNewPoint(){
       this.pointHebdo = {
@@ -109,18 +127,37 @@ export default defineComponent({
 
     async createPointHebdo() {
       try {
-        // Assigner l'utilisateur actuel à pointHebdo.user
         this.pointHebdo.user = this.connectedUser;
         this.pointHebdo.eventDate= new Date(this.pointHebdo.eventDateFormatted)
 
-        // Enregistrer le pointHebdo avec l'utilisateur actuel
         await PointHebdoApiService.create(this.pointHebdo);
         console.log("Point hebdomadaire créé avec succès !");
-        // Affichez un message de succès à l'utilisateur si nécessaire
+
         this.$router.push('/');
       } catch (error) {
         console.error("Erreur lors de la création du point hebdomadaire :", error);
-        // Gérez les erreurs et informez l'utilisateur
+      }
+    },
+
+    async updatePointHebdo() {
+      try {
+        await PointHebdoApiService.update(this.pointHebdo);
+
+        console.log("Point hebdomadaire validé avec succès !");
+        this.$router.push('/');
+      } catch (error) {
+        console.error("Erreur lors de la validation du point hebdomadaire :", error);
+      }
+    },
+
+    async validatePointHebdo() {
+      try {
+        await PointHebdoApiService.validate(this.pointHebdo);
+
+        console.log("Point hebdomadaire validé avec succès !");
+        this.$router.push('/');
+      } catch (error) {
+        console.error("Erreur lors de la validation du point hebdomadaire :", error);
       }
     },
 
@@ -134,12 +171,10 @@ export default defineComponent({
           this.pointHebdo.eventDateFormatted=UtilService.dateToString(this.pointHebdo.eventDate);
 
         } else {
-          // Gérer le cas où la réponse est undefined ou null
           console.error("La réponse de getById est undefined ou null");
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du point hebdomadaire :", error);
-        // Gérer l'erreur et informer l'utilisateur si nécessaire
       }
       this.setLoading(false);
     },
@@ -151,7 +186,7 @@ export default defineComponent({
     if (this.id === undefined) {
       this.initNewPoint();
       console.log('create');
-      // Définissez l'utilisateur par défaut sur l'utilisateur connecté
+      // Définir l'utilisateur par défaut sur l'utilisateur connecté
       this.pointHebdo.user = this.connectedUser;
     } else {
       this.getPointHebdoById(this.id);
@@ -192,4 +227,13 @@ h1{
 .bouton-enregistrer{
   padding-right: 1%;
 }
+
+.input1 {
+  background-color: white;
+  margin: 0.4rem 0;
+  padding: 0rem 0.2rem 0rem 0.2rem;
+  border: 1px solid;
+  border-radius: 3px;
+}
+
 </style>

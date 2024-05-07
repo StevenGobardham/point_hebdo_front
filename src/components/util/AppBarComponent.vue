@@ -12,9 +12,9 @@
         </div>
         <div class="col-2 " v-if="isLoggedIn">
           <div class="fa-pull-right">
-          <span class="btn" @click="dashboard()"><font-awesome-icon icon="fa-solid fa-user-gear" /></span>
-          <span v-if="isLoggedIn" @click="home()" class="btn"><font-awesome-icon icon="fa-solid fa-house" /></span>
-          <span class="btn" @click="logout"><font-awesome-icon icon="fa-solid fa-right-from-bracket" /></span>
+          <span class="btn" v-if="isManager" @click="dashboard()" title="Dashboard"><font-awesome-icon icon="fa-solid fa-user-gear" /></span>
+          <span v-if="isLoggedIn" @click="home()" class="btn" title="Accueil"><font-awesome-icon icon="fa-solid fa-house" /></span>
+          <span class="btn" @click="logout" title="Déconnexion"><font-awesome-icon icon="fa-solid fa-right-from-bracket" /></span>
           </div>
         </div>
       </div>
@@ -29,6 +29,7 @@ import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
 export default {
   name: 'AppBarComponent',
   components: {FontAwesomeIcon},
+
   methods: {
     ...mapActions('auth', ['logout']),
     home() {
@@ -36,10 +37,13 @@ export default {
     },
     dashboard(){
       this.$router.push({"name": 'Dashboard'});
-    }
+    },
   },
   computed: {
     ...mapGetters("auth", ["isLoggedIn", "connectedUser" ]),
+    isManager(){
+      return this.connectedUser.manager===true;
+    }
   },
 }
 </script>

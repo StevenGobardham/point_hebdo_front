@@ -7,9 +7,9 @@
       <div class="col-2"></div>
       <div class="col-8 tableau rounded mt-5">
         <div class="row mt-5 mb-5">
-          <div class="col-4">
+          <div class="col-4" v-if="isManager">
             <span>Collaborateur</span>
-              <select class="form-select form-select-sm" autocomplete="on" aria-label=".form-select-sm example" v-model="selectedUser" @change="filterPointsHebdo">
+              <select  class="form-select form-select-sm mt-2" aria-label=".form-select-sm example" v-model="selectedUser" @change="filterPointsHebdo">
                 <option value="">Afficher tous</option>
                 <option v-for="user in users" :key="user.id" :value="user">{{ user.firstName }} {{ user.lastName }}</option>
               </select>
@@ -17,18 +17,18 @@
           <div class="col-4"></div>
           <div class="col-2">
             <span>Début</span>
-            <input type="date" id="startDate" name="startDate" v-model="startDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
+            <input class="input1 cursor-pointer" type="date" id="startDate" name="startDate" v-model="startDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
           </div>
           <div class="col-2">
             <span>Fin</span>
-            <input type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
+            <input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
           </div>
         </div>
-        <div class="row mt-5">
+        <div class="row mt-5 tableau-container">
           <div class="container">
             <table class="table table-striped">
               <thead class="thead">
-              <tr>
+              <tr class="tableau-header">
                 <th scope="col" class="col-4 text-center">Date</th>
                 <th scope="col" class="col-4 text-center">Collaborateur</th>
                 <th scope="col" class="col-4 text-center">Validé</th>
@@ -36,9 +36,9 @@
               </thead>
               <tbody>
               <tr v-for="pointHebdo in filteredPointsHebdo" :key="pointHebdo.id" @click="showProjectDetails(pointHebdo)">
-                <td class="text-center">{{ UtilService.formatDate(pointHebdo.eventDate) }}</td>
-                <td class="text-center">{{ pointHebdo.user.firstName }} {{ pointHebdo.user.lastName }}</td>
-                <td class="text-center">
+                <td class="text-center cursor-pointer">{{ UtilService.formatDate(pointHebdo.eventDate) }}</td>
+                <td class="text-center cursor-pointer">{{ pointHebdo.user.firstName }} {{ pointHebdo.user.lastName }}</td>
+                <td class="text-center cursor-pointer">
                   <span v-if="pointHebdo.validate"><font-awesome-icon icon="fa-solid fa-check"/></span>
                 </td>
               </tr>
@@ -93,10 +93,14 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isTestMode']),
+    ...mapGetters(["isTestMode", "connectedUser"]),
     UtilService() {
       return UtilService
     },
+    ...mapGetters("auth", ["isLoggedIn", "connectedUser" ]),
+    isManager(){
+      return this.connectedUser.manager===true;
+    }
   },
   methods: {
     ...mapActions(['setLoading']),
@@ -112,6 +116,7 @@ export default {
     create() {
       this.$router.push({"name": 'CreatePointHebdo'});
     },
+
 
     filterPointsHebdo() {
       let filteredPoints = this.pointsHebdo;
@@ -144,7 +149,6 @@ export default {
     },
 
     showProjectDetails(pointHebdo) {
-      console.log(pointHebdo);
       // Passer l'ID du point hebdomadaire ou les détails complets à une autre page ou composant pour afficher les détails du projet
       this.$router.push({ name: 'PointHebdo', params: { id: pointHebdo.id } });
 
@@ -178,4 +182,24 @@ h1 {
   font-size: 17px;
   border: #f3f3f3;
 }
+
+.input1 {
+  margin: 0.4rem 0;
+  padding: 0rem 0.2rem 0rem 0.2rem;
+  border: 1px solid;
+  border-radius: 3px;
+  background-color: white;
+}
+
+.tableau-container {
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.tableau-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+}
+
 </style>
