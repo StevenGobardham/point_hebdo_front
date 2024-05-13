@@ -4,22 +4,22 @@
       <div class="col-4">
         <div class="form-outline" data-mdb-input-init>
           <label class="form-label" for="typeText">Client</label>
-          <input type="text" id="typeText" class="form-control" v-model="project.client" />
+          <input type="text" id="typeText" class="form-control" v-model="project.client" :disabled="isPointHebdoValidated" maxlength=255 />
         </div>
       </div>
       <div class="col-4"></div>
       <div class="col-4">
         <div class="form-outline" data-mdb-input-init>
           <label class="form-label" for="typeText" >Projet</label>
-          <span class="btn d-flex fa-pull-right poubelle" @click="onDeleteProject"><font-awesome-icon icon="fa-solid fa-trash-can" /></span>
-          <input type="text" id="typeText" class="form-control" v-model="project.projet" />
+          <span v-if="! isPointHebdoValidated " class="btn d-flex fa-pull-right poubelle" @click="onDeleteProject" ><font-awesome-icon icon="fa-solid fa-trash-can" /></span>
+          <input type="text" id="typeText" class="form-control" v-model="project.projet" :disabled="isPointHebdoValidated" maxlength=255 />
         </div>
       </div>
     </div>
     <div class="row mt-2 mb-2">
       <div class="form-outline" data-mdb-input-init>
         <label class="form-label" for="textAreaExample">Situation</label>
-        <textarea class="form-control" id="textAreaExample" rows="4" v-model="project.situation"></textarea>
+        <textarea class="form-control" id="textAreaExample" rows="4" v-model="project.situation" :disabled="isPointHebdoValidated"></textarea>
       </div>
     </div>
   </div>
@@ -38,6 +38,10 @@ export default {
       type: Function,
       required: true
     },
+    isPointHebdoValidated: {
+      type: Boolean,
+      required: true
+    }
   },
   data() {
     return {

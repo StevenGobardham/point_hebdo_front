@@ -4,11 +4,11 @@
     <div class="container-fluid header">
       <div class="row">
         <div class="col-2">
-          <img @click="home()" class="d-flex justify-content-start logo" src="../../../public/adg.png" alt="ADG Software Engineering" >
+          <img @click="home()" class="d-flex justify-content-start logo cursor-pointer" src="../../../public/adg.png" alt="ADG Software Engineering" >
         </div>
         <div class="col-8 text-center">
 
-          <h1 class="title" @click="home()">Point hebdo</h1>
+          <h1 class="title cursor-pointer" @click="home()">Point hebdo</h1>
         </div>
         <div class="col-2 " v-if="isLoggedIn">
           <div class="fa-pull-right">

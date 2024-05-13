@@ -29,4 +29,9 @@ export default class PointHebdoApiService{
         const token = store.state.auth.token;
         return await ApiService.put(`${PointHebdoApiService.servicePath}/valide`, projetHebdo, token);
     }
+
+    static async getAllLight() {
+        const token = store.state.auth.token;
+        return await ApiService.get(`${PointHebdoApiService.servicePath}/light`, token);
+    }
 }

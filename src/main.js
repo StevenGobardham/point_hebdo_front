@@ -16,7 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
 
-import {faHouse, faRightFromBracket, faSignOutAlt, faHomeAlt, faSquarePlus, faTrashCan, faUserGear, faUser, faUsers, faCheck} from '@fortawesome/free-solid-svg-icons'
+import {faHouse, faRightFromBracket, faSignOutAlt, faHomeAlt, faSquarePlus, faTrashCan, faUserGear, faUser, faUsers, faCheck, faFileExcel} from '@fortawesome/free-solid-svg-icons'
 
 
 
@@ -31,6 +31,7 @@ library.add(faUserGear)
 library.add(faUser)
 library.add(faUsers)
 library.add(faCheck)
+library.add(faFileExcel)
 
 
 

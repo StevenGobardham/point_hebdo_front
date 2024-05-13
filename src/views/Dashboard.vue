@@ -38,15 +38,15 @@ export default defineComponent({
   components: { ListUsersComponent, AppBarComponent, LoadingComponent, CreateUserComponent },
   data() {
     return {
-      showList: true, // Affiche ListUsersComponent par défaut
+      showList: true,
     };
   },
   methods: {
     createUser() {
-      this.showList = false; // Cache ListUsersComponent
+      this.showList = false;
     },
     listUsers() {
-      this.showList = true; // Affiche ListUsersComponent
+      this.showList = true;
     }
   }
 });

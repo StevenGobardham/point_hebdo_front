@@ -14,50 +14,58 @@
           <div class="row calendar">
             <div class="col-2 mt-4">
               <span>Date</span>
-              <input class="input1 cursor-pointer" type="date" id="start" name="trip-start" v-model="pointHebdo.eventDateFormatted" />
+              <input class="input1 cursor-pointer" type="date" id="start" name="trip-start" v-model="pointHebdo.eventDateFormatted" :disabled="pointHebdo.validate" />
             </div>
             <div class="col-5"></div>
             <div class="col-5 mt-4">
             </div>
           </div>
-          <ProjectDetailsComponent v-if="pointHebdo.projetDetails!=null"
-                                   v-for="(project, index) in pointHebdo.projetDetails" :key="index" @delete-project="deleteProject(index)"
-                                   :project="project"/>
+            <ProjectDetailsComponent
+                  v-if="pointHebdo.projetDetails != null"
+                  v-for="(project, index) in pointHebdo.projetDetails"
+                  :key="index"
+                  @delete-project="deleteProject(index)"
+                  :project="project"
+                  :is-point-hebdo-validated="pointHebdo.validate"/>
           <div class="row mt-2 mb-2">
             <div class="col-12 text-center">
-              <div class="btn plus" @click="addProject()"><font-awesome-icon icon="fa-solid fa-square-plus" /></div>
+              <div class="btn plus" @click="addProject()" :hidden="pointHebdo.validate"><font-awesome-icon icon="fa-solid fa-square-plus"/></div>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
               <div class="form-outline" data-mdb-input-init>
                 <label class="form-label" for="textAreaNote">Notes</label>
-                <textarea class="form-control" id="textAreaNote" rows="4" v-model="pointHebdo.note"></textarea>
+                <textarea class="form-control" id="textAreaNote" rows="4" v-model="pointHebdo.note" :disabled="pointHebdo.validate"></textarea>
               </div>
             </div>
           </div>
           <div class="row mt-4 mb-4">
             <div class="col-12">
-              <div class="form-outline" data-mdb-input-init>
+              <div class="form-outline" data-mdb-input-init >
                 <label class="form-label" for="textAreaPriority">Priorité</label>
-                <textarea class="form-control" id="textAreaPriority" rows="4" v-model="pointHebdo.priority"></textarea>
+                <textarea class="form-control" id="textAreaPriority" rows="4" v-model="pointHebdo.priority" :disabled="pointHebdo.validate"></textarea>
               </div>
             </div>
           </div>
-          <div v-if="isManager">
+          <div v-if="pointHebdo.validate">
             <div class="row fa-pull-right bouton-enregistrer">
-              <button type="submit" id="password" @click="validatePointHebdo" class="btn-bouton rounded mb-3"
-                      style="padding-left: 2rem; padding-right: 2rem;">Valider</button>
-            </div>
-            <div class="mt-5">
-              <button type="submit" id="password" @click="updatePointHebdo()" class="btn-bouton rounded mb-3"
-                      style="padding-left: 2rem; padding-right: 2rem;">Modifier</button>
+              <button type="submit" id="password" @click="goToHome()" class="btn-bouton rounded mb-3" style="padding-left: 2rem; padding-right: 2rem;">Accueil</button>
             </div>
           </div>
           <div v-else>
-            <div class="row fa-pull-right  mt-3 bouton-enregistrer">
-              <button type="submit" id="password" @click="createPointHebdo()" class="btn-bouton rounded mb-3"
-                      style="padding-left: 2rem; padding-right: 2rem;">Enregistrer</button>
+            <div v-if="isManager">
+              <div class="row fa-pull-right bouton-enregistrer">
+                <button type="submit" id="password" @click="validatePointHebdo" class="btn-bouton rounded mb-3" style="padding-left: 2rem; padding-right: 2rem;">Valider</button>
+              </div>
+              <div class="mt-5">
+                <button type="submit" id="password" @click="createOrModifyPointHebdo()" class="btn-bouton rounded mb-3" style="padding-left: 2rem; padding-right: 2rem;">{{ isNew ? 'Enregistrer' : 'Modifier' }}</button>
+              </div>
+            </div>
+            <div v-else>
+              <div class="row fa-pull-right  mt-3 bouton-enregistrer">
+                <button type="submit" id="password" @click="createOrModifyPointHebdo()" class="btn-bouton rounded mb-3" style="padding-left: 2rem; padding-right: 2rem;">{{ isNew ? 'Enregistrer' : 'Modifier' }}</button>
+              </div>
             </div>
           </div>
         </div>
@@ -102,13 +110,19 @@ export default defineComponent({
     }
   },
 
+  watch: {
+    'pointHebdo.eventDateFormatted': function(newDate) {
+      this.pointHebdo.eventDate = new Date(newDate);
+    }
+  },
+
   methods: {
     initNewPoint(){
       this.pointHebdo = {
         projetDetails: [],
         note: null,
         priority: null,
-        eventDateFormatted: UtilService.dateToString(new Date())
+        eventDateFormatted: this.getCurrentDate()
       }
       this.addProject()
     },
@@ -139,6 +153,14 @@ export default defineComponent({
       }
     },
 
+    createOrModifyPointHebdo() {
+      if (this.isNew) {
+        this.createPointHebdo();
+      } else {
+        this.updatePointHebdo();
+      }
+    },
+
     async updatePointHebdo() {
       try {
         await PointHebdoApiService.update(this.pointHebdo);
@@ -161,6 +183,15 @@ export default defineComponent({
       }
     },
 
+    getCurrentDate() {
+      const currentDate = new Date().toISOString().split('T')[0];
+      return currentDate;
+    },
+
+    goToHome() {
+      this.$router.push('/');
+    },
+
     ...mapActions(['setLoading']),
     async getPointHebdoById(id) {
       this.setLoading(true);
@@ -168,8 +199,7 @@ export default defineComponent({
         const result = await PointHebdoApiService.getById(id);
         if (result !== undefined && result !== null) {
           this.pointHebdo = result;
-          this.pointHebdo.eventDateFormatted=UtilService.dateToString(this.pointHebdo.eventDate);
-
+          this.pointHebdo.eventDateFormatted = UtilService.dateToString(this.pointHebdo.eventDate);
         } else {
           console.error("La réponse de getById est undefined ou null");
         }
@@ -186,7 +216,6 @@ export default defineComponent({
     if (this.id === undefined) {
       this.initNewPoint();
       console.log('create');
-      // Définir l'utilisateur par défaut sur l'utilisateur connecté
       this.pointHebdo.user = this.connectedUser;
     } else {
       this.getPointHebdoById(this.id);

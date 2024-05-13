@@ -5,7 +5,7 @@
       <div class="row">
         <div class="col-4"></div>
         <div class="col-4 rounded connexion">
-          <div class="alert alert-danger" v-if="errorMessage!=null"></div>
+          <div class="alert alert-danger" v-if="errorMessage!=null">{{ errorMessage }}</div>
           <h2 class=" mt-3 text-center">Connexion</h2>
           <div class="mb-4 mt-5">
             <label for="username" class="form-label ">Nom d'utilisateur</label>

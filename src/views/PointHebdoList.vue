@@ -17,11 +17,11 @@
           <div class="col-4"></div>
           <div class="col-2">
             <span>Début</span>
-            <input class="input1 cursor-pointer" type="date" id="startDate" name="startDate" v-model="startDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
+            <input class="input1 cursor-pointer" type="date" id="startDate"  name="startDate" v-model="startDate" @change="filterPointsHebdo" />
           </div>
           <div class="col-2">
             <span>Fin</span>
-            <input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo" min="2024-04-01" max="3000-12-31"/>
+            <input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo"/>
           </div>
         </div>
         <div class="row mt-5 tableau-container">
@@ -47,7 +47,11 @@
           </div>
         </div>
         <div class="row mt-5">
-          <div class="col-10"></div>
+          <div class="col-10">
+            <export-excel :data="json_data">
+              <button class="btn-export rounded mb-3">Export&nbsp;&nbsp;<i><font-awesome-icon icon="fas fa-file-excel"/></i></button>
+            </export-excel>
+          </div>
           <div class="col-2">
             <button type="submit" id="password" @click="create()" class="btn-bouton rounded mb-3" style="padding-left: 2rem; padding-right: 2rem;">Créer</button>
           </div>
@@ -66,11 +70,12 @@ import UserApiService from "@/services/api/userApiService.js";
 import PointHebdoApiService from "@/services/api/pointHebdoApiService.js";
 import UtilService from "../services/utilService.js";
 
+
 export default {
   name: 'PointHebdoList',
   components: {
     AppBarComponent,
-    LoadingComponent
+    LoadingComponent,
   },
   data() {
     return {
@@ -79,14 +84,12 @@ export default {
       selectedUser: null,
       startDate: null,
       endDate: null,
-      filteredPointsHebdo: [], // Points Hebdo filtrés par utilisateur sélectionné et dates sélectionnées
+      filteredPointsHebdo: [],
     }
   },
   async created() {
     try {
-      // Récupérer la liste des utilisateurs
       this.users = await UserApiService.getAll();
-      // Récupérer la liste des points hebdomadaires
       this.createList();
     } catch (error) {
       console.error("Erreur lors de la récupération des données :", error);
@@ -106,8 +109,8 @@ export default {
     ...mapActions(['setLoading']),
     async createList() {
       try {
-        this.pointsHebdo = await PointHebdoApiService.getAll();
-        // Initialisation des points Hebdo filtrés
+        this.pointsHebdo = await PointHebdoApiService.getAllLight();
+        this.pointsHebdo.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
         this.filteredPointsHebdo = this.pointsHebdo;
       } catch (error) {
         console.error("Erreur lors de la récupération des points hebdomadaires :", error);
@@ -116,7 +119,6 @@ export default {
     create() {
       this.$router.push({"name": 'CreatePointHebdo'});
     },
-
 
     filterPointsHebdo() {
       let filteredPoints = this.pointsHebdo;
@@ -176,11 +178,16 @@ h1 {
   border: 1px;
 }
 
-.btn-bouton {
+.btn-bouton,.btn-export {
   background-color: #b6057a;
   color: white;
   font-size: 17px;
   border: #f3f3f3;
+}
+
+.btn-export{
+  padding-left: 2%;
+  padding-right: 2%;
 }
 
 .input1 {
