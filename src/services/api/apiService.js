@@ -16,7 +16,6 @@ export default class ApiService {
     static async post(endpoint, body, token=null) {
         let headers = ApiService.extractHeaders();
         try {
-            console.log(body)
             const response = await axios.post(`${ApiService.baseUrl}${endpoint}`, body, {headers});
             return response.data;
         } catch (error) {

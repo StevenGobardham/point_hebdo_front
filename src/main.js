@@ -43,3 +43,4 @@ app.use(store);
 app.use(vuetify)
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.mount('#app');
+

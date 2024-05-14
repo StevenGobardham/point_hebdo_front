@@ -82,14 +82,23 @@ export default {
     ...mapActions(['setLoading']),
     async onSubmit() {
       this.setLoading(true);
-      await UserApiService.create(this.user).then((result) => {
-        if(result.status===true) {
-          window.location.reload();
-        }
-      }).catch((error) => {
+      try {
+        await UserApiService.create(this.user);
+        // Réinitialiser les champs du formulaire une fois l'utilisateur créé
+        this.user = {
+          username: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          manager: false // Vous pouvez également réinitialiser d'autres champs si nécessaire
+        };
+        window.location.reload();
+      } catch (error) {
         ErrorService.showErrorInAlert(error);
-      });
-      this.setLoading(false);
+      } finally {
+        this.setLoading(false);
+      }
     }
   }
 }

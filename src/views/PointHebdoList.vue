@@ -48,8 +48,8 @@
         </div>
         <div class="row mt-5">
           <div class="col-10">
-            <export-excel :data="json_data">
-              <button class="btn-export rounded mb-3">Export&nbsp;&nbsp;<i><font-awesome-icon icon="fas fa-file-excel"/></i></button>
+            <export-excel :data="filteredPointsHebdo" :fields="excelFields">
+
             </export-excel>
           </div>
           <div class="col-2">
@@ -69,22 +69,24 @@ import AppBarComponent from "@/components/util/AppBarComponent.vue";
 import UserApiService from "@/services/api/userApiService.js";
 import PointHebdoApiService from "@/services/api/pointHebdoApiService.js";
 import UtilService from "../services/utilService.js";
-
+import ExportExcel from "@/components/util/ExportExcel.vue";
 
 export default {
   name: 'PointHebdoList',
   components: {
     AppBarComponent,
     LoadingComponent,
+    ExportExcel,
   },
   data() {
     return {
       pointsHebdo: [],
       users: [],
       selectedUser: null,
-      startDate: null,
-      endDate: null,
+      startDate: new Date().toISOString().split('T')[0],
+      endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0],
       filteredPointsHebdo: [],
+      excelFields: ['Date','Collaborateur', 'Client', 'Projet', 'Situation', 'Note', 'Priorité' ],
     }
   },
   async created() {
@@ -111,7 +113,11 @@ export default {
       try {
         this.pointsHebdo = await PointHebdoApiService.getAllLight();
         this.pointsHebdo.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        this.filteredPointsHebdo = this.pointsHebdo;
+        // Ajouter une propriété "id" à chaque pointHebdo
+        this.filteredPointsHebdo = this.pointsHebdo.map(point => ({
+          ...point,
+          id: point.id
+        }));
       } catch (error) {
         console.error("Erreur lors de la récupération des points hebdomadaires :", error);
       }
@@ -147,19 +153,27 @@ export default {
       }
 
       // Mettre à jour les points Hebdo filtrés
-      this.filteredPointsHebdo = filteredPoints;
+      // Assurez-vous que la propriété "id" est ajoutée à chaque pointHebdo
+      this.filteredPointsHebdo = filteredPoints.map(point => ({
+        ...point,
+        id: point.id
+      }));
     },
 
     showProjectDetails(pointHebdo) {
       // Passer l'ID du point hebdomadaire ou les détails complets à une autre page ou composant pour afficher les détails du projet
       this.$router.push({ name: 'PointHebdo', params: { id: pointHebdo.id } });
-
     },
-
+  },
+  watch: {
+    pointsHebdo: function() {
+      this.filterPointsHebdo();
+    }
   },
   mounted() {
 
   }
+
 }
 </script>
 
