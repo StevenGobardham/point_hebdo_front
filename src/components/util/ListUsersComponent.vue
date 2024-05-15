@@ -109,6 +109,7 @@
                   <v-text-field
                       v-model="editedItem.password"
                       label="Mot de passe"
+                      :type="'password'"
                   ></v-text-field>
                 </v-col>
               </v-row>

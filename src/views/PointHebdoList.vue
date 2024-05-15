@@ -7,7 +7,7 @@
       <div class="col-2"></div>
       <div class="col-8 tableau rounded mt-5">
         <div class="row mt-5 mb-5">
-          <div class="col-4" v-if="isManager">
+          <div class="col-3" v-if="isManager">
             <span>Collaborateur</span>
               <select  class="form-select form-select-sm mt-2" aria-label=".form-select-sm example" v-model="selectedUser" @change="filterPointsHebdo">
                 <option value="">Afficher tous</option>
@@ -17,11 +17,11 @@
           <div class="col-4"></div>
           <div class="col-2">
             <span>Début</span>
-            <input class="input1 cursor-pointer" type="date" id="startDate"  name="startDate" v-model="startDate" @change="filterPointsHebdo" />
+            <div><input class="input1 cursor-pointer" type="date" id="startDate"  name="startDate" v-model="startDate" @change="filterPointsHebdo" /></div>
           </div>
           <div class="col-2">
             <span>Fin</span>
-            <input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo"/>
+            <div><input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo"/></div>
           </div>
         </div>
         <div class="row mt-5 tableau-container">
@@ -199,15 +199,12 @@ h1 {
   border: #f3f3f3;
 }
 
-.btn-export{
-  padding-left: 2%;
-  padding-right: 2%;
-}
 
 .input1 {
   margin: 0.4rem 0;
   padding: 0rem 0.2rem 0rem 0.2rem;
   border: 1px solid;
+  border-color: #d8d8d8;
   border-radius: 3px;
   background-color: white;
 }

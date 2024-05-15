@@ -1,12 +1,14 @@
 <template>
   <button class="btn-export rounded mb-3" @click="exportToExcel">
-    Exporter &nbsp;&nbsp;<i><font-awesome-icon icon="fas fa-file-excel"/></i>
+    Exporter
   </button>
+  <div><i @click="exportToExcel"><img class="icon cursor-pointer" src="../../../public/icons8-export-excel-50%20(1).png"></i></div>
 </template>
 
 <script>
 import ExcelJS from 'exceljs';
 import PointHebdoApiService from "@/services/api/pointHebdoApiService.js";
+import {mapActions} from "vuex";
 
 export default {
   props: {
@@ -25,7 +27,9 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['setLoading']),
     async exportToExcel() {
+      this.setLoading(true);
       if (!Array.isArray(this.data) || this.data.length === 0) {
         console.error('Aucune donnée à exporter.');
         return;
@@ -93,7 +97,27 @@ export default {
         a.click();
         window.URL.revokeObjectURL(url);
       });
+      this.setLoading(false);
     }
   }
 };
 </script>
+
+<style>
+.btn-export{
+  padding-left: 2%;
+  padding-right: 2%;
+  background-color: #b6057a;
+  color: white;
+  font-size: 17px;
+  border: #f3f3f3;
+  margin-left: 3%;
+  margin-top: 1%;
+}
+
+.icon{
+  margin-left: 7%;
+  margin-bottom: 2%;
+  width: 5%;
+}
+</style>

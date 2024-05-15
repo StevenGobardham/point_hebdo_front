@@ -55,12 +55,12 @@ export default {
   data() {
     return {
       user: {
-        username: 'rezf',
-        firstName: 'rfezff',
-        lastName: 'eqvgf',
-        email: 'qedfsv',
-        password: 'qvfd',
-        manager: true,
+        username: null,
+        firstName: null,
+        lastName: null,
+        email: null,
+        password: null,
+        manager: null,
       },
       mailAvailabiltyStatus: null,
       usernameAvailabiltyStatus: null,

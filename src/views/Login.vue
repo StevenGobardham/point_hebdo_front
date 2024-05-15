@@ -88,11 +88,6 @@ export default {
     },
   },
   mounted() {
-    if(this.isTestMode){
-      this.user.identifier='test';
-      this.user.password='test';
-      
-    }
   }
 
 }

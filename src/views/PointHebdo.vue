@@ -262,6 +262,7 @@ h1{
   margin: 0.4rem 0;
   padding: 0rem 0.2rem 0rem 0.2rem;
   border: 1px solid;
+  border-color: #d8d8d8;
   border-radius: 3px;
 }
 
