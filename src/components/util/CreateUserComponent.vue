@@ -19,7 +19,7 @@
       <label class="form-label mt-5" for="email">Email</label>
       <input type="email" v-model="user.email"
              id="email" class="form-control mb-4"/>
-      <div class="text-center mt-4">
+      <div class="text-center mt-4" hidden="">
         <input class="form-check-input" v-model="user.manager"
                id="manager" type="checkbox">
         <label class="form-check-label" for="flexCheckDefault">

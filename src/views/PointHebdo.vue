@@ -14,10 +14,16 @@
           <div class="row calendar">
             <div class="col-2 mt-4">
               <span>Date</span>
-              <input class="input1 cursor-pointer" type="date" id="start" name="trip-start" v-model="pointHebdo.eventDateFormatted" :disabled="pointHebdo.validate" />
+              <input class="input1 cursor-pointer" type="date" id="start" max="9999-12-31" name="trip-start" v-model="pointHebdo.eventDateFormatted" :disabled="pointHebdo.validate" />
             </div>
             <div class="col-5"></div>
-            <div class="col-5 mt-4">
+            <div class="col-1"></div>
+            <div class="col-4 mt-4" v-if="isManager">
+                <span>Collaborateur</span>
+                <select  class="form-select form-select-sm mt-2" aria-label=".form-select-sm example" v-model="selectedUser" :disabled="pointHebdo.validate">
+                  <option value="">Afficher tous</option>
+                  <option v-for="user in users" :key="user.id" :value="user">{{ user.firstName }} {{ user.lastName }}</option>
+                </select>
             </div>
           </div>
             <ProjectDetailsComponent
@@ -83,6 +89,7 @@ import ProjectDetailsComponent from "@/components/util/ProjectDetailsComponent.v
 import PointHebdoApiService from "@/services/api/pointHebdoApiService.js";
 import {mapActions, mapGetters} from "vuex";
 import UtilService from "@/services/utilService.js";
+import UserApiService from "@/services/api/userApiService.js";
 
 
 export default defineComponent({
@@ -90,12 +97,23 @@ export default defineComponent({
   props: ['id'],
   data() {
     return {
+      users: [],
+      selectedUser: null,
       pointHebdo: {
+        user : null,
         projetDetails: [],
         note: null,
         priority: null,
         eventDateFormatted: UtilService.dateToString(new Date())
       },
+    }
+  },
+
+  async created() {
+    try {
+      this.users = await UserApiService.getAll();
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données :", error);
     }
   },
 
@@ -121,6 +139,7 @@ export default defineComponent({
       this.pointHebdo = {
         projetDetails: [],
         note: null,
+        user : null,
         priority: null,
         eventDateFormatted: this.getCurrentDate()
       }
@@ -141,12 +160,14 @@ export default defineComponent({
 
     async createPointHebdo() {
       try {
-        this.pointHebdo.user = this.connectedUser;
-        this.pointHebdo.eventDate= new Date(this.pointHebdo.eventDateFormatted)
-
+        if (!this.isManager) {
+          this.pointHebdo.user = this.connectedUser;
+        }else {
+          this.pointHebdo.user = this.selectedUser;
+        }
+        this.pointHebdo.eventDate = new Date(this.pointHebdo.eventDateFormatted);
         await PointHebdoApiService.create(this.pointHebdo);
         console.log("Point hebdomadaire créé avec succès !");
-
         this.$router.push('/');
       } catch (error) {
         console.error("Erreur lors de la création du point hebdomadaire :", error);
@@ -163,6 +184,11 @@ export default defineComponent({
 
     async updatePointHebdo() {
       try {
+        if (!this.isManager) {
+          this.pointHebdo.user = this.connectedUser;
+        }else {
+          this.pointHebdo.user = this.selectedUser;
+        }
         await PointHebdoApiService.update(this.pointHebdo);
 
         console.log("Point hebdomadaire validé avec succès !");
@@ -174,6 +200,11 @@ export default defineComponent({
 
     async validatePointHebdo() {
       try {
+        if (!this.isManager) {
+          this.pointHebdo.user = this.connectedUser;
+        }else {
+          this.pointHebdo.user = this.selectedUser;
+        }
         await PointHebdoApiService.validate(this.pointHebdo);
 
         console.log("Point hebdomadaire validé avec succès !");
@@ -199,6 +230,7 @@ export default defineComponent({
         const result = await PointHebdoApiService.getById(id);
         if (result !== undefined && result !== null) {
           this.pointHebdo = result;
+          this.selectedUser=this.pointHebdo.user
           this.pointHebdo.eventDateFormatted = UtilService.dateToString(this.pointHebdo.eventDate);
         } else {
           console.error("La réponse de getById est undefined ou null");
@@ -208,10 +240,7 @@ export default defineComponent({
       }
       this.setLoading(false);
     },
-
   },
-
-
   mounted() {
     if (this.id === undefined) {
       this.initNewPoint();

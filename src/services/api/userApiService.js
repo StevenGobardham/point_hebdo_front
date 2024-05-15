@@ -30,5 +30,10 @@ export default class UserApiService {
         return await ApiService.put(`${UserApiService.servicePath}`, user, token);
     }
 
+    static async getAllArchived() {
+        const token = store.state.auth.token;
+        return await ApiService.get(`${UserApiService.servicePath}/archived`, token);
+    }
+
 
 }

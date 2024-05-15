@@ -7,7 +7,7 @@
       <div class="col-2"></div>
       <div class="col-8 tableau rounded mt-5">
         <div class="row mt-5 mb-5">
-          <div class="col-3" v-if="isManager">
+          <div class="col-4" v-if="isManager">
             <span>Collaborateur</span>
               <select  class="form-select form-select-sm mt-2" aria-label=".form-select-sm example" v-model="selectedUser" @change="filterPointsHebdo">
                 <option value="">Afficher tous</option>
@@ -17,11 +17,11 @@
           <div class="col-4"></div>
           <div class="col-2">
             <span>Début</span>
-            <div><input class="input1 cursor-pointer" type="date" id="startDate"  name="startDate" v-model="startDate" @change="filterPointsHebdo" /></div>
+            <div><input class="input1 cursor-pointer" type="date" id="startDate"  name="startDate" max="9999-12-31" v-model="startDate" @change="filterPointsHebdo" /></div>
           </div>
           <div class="col-2">
             <span>Fin</span>
-            <div><input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" v-model="endDate" @change="filterPointsHebdo"/></div>
+            <div><input class="input1 cursor-pointer" type="date" id="endDate" name="endDate" max="9999-12-31" v-model="endDate" @change="filterPointsHebdo"/></div>
           </div>
         </div>
         <div class="row mt-5 tableau-container">
@@ -47,8 +47,8 @@
           </div>
         </div>
         <div class="row mt-5">
-          <div class="col-10">
-            <export-excel :data="filteredPointsHebdo" :fields="excelFields">
+          <div class="col-10" >
+            <export-excel v-if="isManager" :data="filteredPointsHebdo" :fields="excelFields">
 
             </export-excel>
           </div>
@@ -83,19 +83,17 @@ export default {
       pointsHebdo: [],
       users: [],
       selectedUser: null,
-      startDate: new Date().toISOString().split('T')[0],
-      endDate: new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0],
+      startDate: null,
+      endDate: null,
       filteredPointsHebdo: [],
       excelFields: ['Date','Collaborateur', 'Client', 'Projet', 'Situation', 'Note', 'Priorité' ],
     }
   },
-  async created() {
-    try {
-      this.users = await UserApiService.getAll();
-      this.createList();
-    } catch (error) {
-      console.error("Erreur lors de la récupération des données :", error);
-    }
+  created() {
+    const today = new Date();
+    this.startDate = this.isManager ? new Date(today.setDate(today.getDate() - 7)).toISOString().split('T')[0] : new Date(today.setMonth(today.getMonth() - 6)).toISOString().split('T')[0];
+    this.endDate = this.isManager ? new Date(today.setDate(today.getDate() + 14)).toISOString().split('T')[0] : new Date(today.setMonth(today.getMonth() + 7)).toISOString().split('T')[0];
+    this.initializeData();
   },
   computed: {
     ...mapGetters(["isTestMode", "connectedUser"]),
@@ -120,6 +118,14 @@ export default {
         }));
       } catch (error) {
         console.error("Erreur lors de la récupération des points hebdomadaires :", error);
+      }
+    },
+    async initializeData() {
+      try {
+        this.users = await UserApiService.getAll();
+        this.createList();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données :", error);
       }
     },
     create() {
