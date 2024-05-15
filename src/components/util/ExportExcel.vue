@@ -1,5 +1,5 @@
 <template>
-  <button class="btn-export rounded mb-3" @click="exportToExcel">
+  <button class="btn-export rounded " @click="exportToExcel">
     Exporter
   </button>
   <div><i @click="exportToExcel"><img class="icon cursor-pointer" src="../../../public/icons8-export-excel-50%20(1).png"></i></div>
@@ -49,7 +49,6 @@ export default {
       const headers = this.fields.map(field => field.charAt(0).toUpperCase() + field.slice(1));
       worksheet.addRow(headers);
 
-      // Ajouter les données des détails à la feuille Excel
       this.elements.forEach(pointHebdo => {
         const firstDetail = pointHebdo.projetDetails[0];
         const fullName = `${pointHebdo.user.firstName} ${pointHebdo.user.lastName}`;
@@ -62,7 +61,6 @@ export default {
         ];
         worksheet.addRow(firstRowData);
 
-        // Ajouter les données du deuxième projet détaillé s'il existe
         if (pointHebdo.projetDetails.length > 1) {
           const secondDetail = pointHebdo.projetDetails[1];
           const secondRowData = [
@@ -112,7 +110,6 @@ export default {
   font-size: 17px;
   border: #f3f3f3;
   margin-left: 3%;
-  margin-top: 1%;
 }
 
 .icon{

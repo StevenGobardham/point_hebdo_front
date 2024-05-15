@@ -113,7 +113,7 @@ export default {
       try {
         this.pointsHebdo = await PointHebdoApiService.getAllLight();
         this.pointsHebdo.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
-        // Ajouter une propriété "id" à chaque pointHebdo
+
         this.filteredPointsHebdo = this.pointsHebdo.map(point => ({
           ...point,
           id: point.id
@@ -129,12 +129,12 @@ export default {
     filterPointsHebdo() {
       let filteredPoints = this.pointsHebdo;
 
-      // Filtrer par utilisateur
+
       if (this.selectedUser) {
         filteredPoints = filteredPoints.filter(pointHebdo => pointHebdo.user.id === this.selectedUser.id);
       }
 
-      // Filtrer par date de début
+
       if (this.startDate) {
         let startDate = new Date(this.startDate);
         startDate.setHours(0);
@@ -143,7 +143,7 @@ export default {
         filteredPoints = filteredPoints.filter(pointHebdo => new Date(pointHebdo.eventDate) >= startDate);
       }
 
-      // Filtrer par date de fin
+
       if (this.endDate) {
         let endDate = new Date(this.endDate);
         endDate.setHours(23);
@@ -152,8 +152,7 @@ export default {
         filteredPoints = filteredPoints.filter(pointHebdo => new Date(pointHebdo.eventDate).getTime() <= endDate.getTime());
       }
 
-      // Mettre à jour les points Hebdo filtrés
-      // Assurez-vous que la propriété "id" est ajoutée à chaque pointHebdo
+
       this.filteredPointsHebdo = filteredPoints.map(point => ({
         ...point,
         id: point.id
@@ -161,7 +160,6 @@ export default {
     },
 
     showProjectDetails(pointHebdo) {
-      // Passer l'ID du point hebdomadaire ou les détails complets à une autre page ou composant pour afficher les détails du projet
       this.$router.push({ name: 'PointHebdo', params: { id: pointHebdo.id } });
     },
   },
@@ -192,7 +190,7 @@ h1 {
   border: 1px;
 }
 
-.btn-bouton,.btn-export {
+.btn-bouton, {
   background-color: #b6057a;
   color: white;
   font-size: 17px;
