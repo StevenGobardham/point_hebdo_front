@@ -13,7 +13,7 @@
               <span class="btn text-center" @click="createUser"><font-awesome-icon icon="fa-solid fa-user" />&nbsp;&nbsp;Création d'un utilisateur</span>
             </div>
             <div class="row mt-5">
-              <span class="btn text-center" @click="displayArchivedUsers"><font-awesome-icon icon="fa-solid fa-users" />&nbsp;&nbsp;Utilisateur archivés</span>
+              <span class="btn text-center" @click="displayArchivedUsers"><font-awesome-icon icon="fa-solid fa-users" />&nbsp;&nbsp;Utilisateurs archivés</span>
             </div>
           </div>
         </div>
